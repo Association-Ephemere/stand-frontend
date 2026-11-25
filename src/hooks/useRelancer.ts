@@ -14,7 +14,11 @@ export function useRelancer(
     try {
       const { data: detail } = await api.get<JobDetail>(`/jobs/${oldId}`);
       const { data: created } = await api.post<PostJobResponse>("/jobs", {
-        photos: detail.photos,
+        photos: detail.photos.map(({ photoStorageKey, copies }) => ({
+          photoStorageKey,
+          copies,
+        })),
+        ticketNumber: detail.ticketNumber,
       });
       const newJob: Job = {
         id: created.jobId,
